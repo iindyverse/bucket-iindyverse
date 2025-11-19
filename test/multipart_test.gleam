@@ -346,8 +346,9 @@ pub fn no_such_upload_test() {
     |> upload_part.build(helpers.creds)
 
   case erlang.rescue(fn() { httpc.send_bits(req) }) {
-    Error(crash) -> {
-      echo crash
+    Error(error) -> {
+      // TODO match Errored(UnexpectedHttpcError(SocketClosedRemotely))
+      let assert erlang.Errored(_unexpected_httpc_error) = error
       Nil
     }
     Ok(res) -> {
